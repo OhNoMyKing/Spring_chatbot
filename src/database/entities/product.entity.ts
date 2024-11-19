@@ -3,6 +3,7 @@ import { RelatedImage } from "./related-image.entity";
 import { Category } from "./category.entity";
 import { Cart } from "./cart.entity";
 import { CartItem } from "./cart-item.entity";
+import { Rating } from "./rating.entity";
 
 
 @Entity({name : 'product'})
@@ -31,6 +32,6 @@ export class Product{
     @OneToMany(()=> CartItem, (cartItem) => cartItem.product)
     cartItem : CartItem[];
     //
-    // @OneToMany(() => Ratings, (ratings) => ratings.product)
-    // ratings : Ratings[];
+    @OneToMany(() => Rating, (rating) => rating.product)
+    rating : Rating[];
 }

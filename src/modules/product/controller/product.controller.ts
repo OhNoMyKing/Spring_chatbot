@@ -5,6 +5,8 @@ import { CreateProductRequest } from "src/payload/request/create.product.request
 import { ProductToProductResponse } from "src/converter/ProductToProductResponse";
 import { RelatedImage } from "src/database/entities/related-image.entity";
 import { RelatedImageImpl } from "src/modules/related-image/service/impl/impl.related-image.service";
+import { ProductCountAndDetailsResponseDto } from "src/payload/response/product.response.dto";
+import { Product } from "src/database/entities/product.entity";
 
 @Controller()
 export class ProductController{
@@ -32,9 +34,19 @@ export class ProductController{
         console.log(productResponse);
         return productResponse;
     }
-    @Get('/products/count')
-    async getProductCount() : Promise<number>{
-        const count = this.productService.getProductsToCount();
-        return count;
+    @Get('/products/count-and-details')
+    async getProductCountAndDetails() : Promise<ProductCountAndDetailsResponseDto>{
+        const count =  await this.productService.getProductsToCount();
+        console.log(count);
+        const products = await  this.productService.getRemainingProducts();
+        const productCountAndDetailsResponseDto = new ProductCountAndDetailsResponseDto();
+        productCountAndDetailsResponseDto.count = count;
+        productCountAndDetailsResponseDto.products = products;
+        return productCountAndDetailsResponseDto;
+    }
+    @Get('/products/shirt/:shirtNumber')
+    async getProductByInformation(@Param('shirtNumber') shirtNumber : number) : Promise<Product[]>{
+        const productList = await this.productService.findProductByInfo(shirtNumber);
+        return productList;
     }
 }

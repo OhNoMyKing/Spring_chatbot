@@ -14,6 +14,7 @@ import { RelatedImageImpl } from "src/modules/related-image/service/impl/impl.re
 import { RelatedImage } from "src/database/entities/related-image.entity";
 import { Category } from "src/database/entities/category.entity";
 import { CategoryServiceImpl } from "src/modules/category/service/impl/impl.category.service";
+import { ProductDetailDto } from "src/payload/response/product.response.dto";
 @Injectable()
 export class ProductServiceImpl implements ProductServiceInterface{
     constructor(
@@ -137,6 +138,31 @@ export class ProductServiceImpl implements ProductServiceInterface{
             FROM product;
         `
         const result = await this.entityManager.query(query);
-        return result[0];
+        return parseInt(result[0].count,10);
+    }
+    //
+    async getRemainingProducts(): Promise<ProductDetailDto[]> {
+        const products = await this.productRepository.find({
+            where: {status : 1}
+        });
+        const productDetailDtoList = products.map(product =>{
+            const productDetailDto = new ProductDetailDto();
+            productDetailDto.id = product.id;
+            productDetailDto.image_url = product.mainImage;
+            return productDetailDto;
+        });
+        return productDetailDtoList;
+    }
+
+    async findProductByInfo(shirtNumber: number): Promise<Product[]> {
+        try{
+            const product = await this.productRepository
+                .createQueryBuilder('product')
+                .where('product.name LIKE :shirtNumber' , {shirtNumber: `%${shirtNumber}%`})
+                .getMany();
+            return product;
+        }catch(error){
+            console.error('Loi khi tim san pham',error);
+        }
     }
 }

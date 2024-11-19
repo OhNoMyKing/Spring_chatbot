@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Role } from "./role.entity";
 import { Cart } from "./cart.entity";
+import { Rating } from "./rating.entity";
 
 
 @Entity('user')
@@ -43,6 +44,6 @@ export class User{
     @OneToMany(()=> Cart, (cart) => cart.user)
     cart : Cart[];
     //ratings
-    // @OneToMany(()=> Ratings, (ratings) => ratings.user)
-    // ratings : Ratings[];
+    @OneToMany(()=> Rating, (rating) => rating.user)
+    rating : Rating[];
 }

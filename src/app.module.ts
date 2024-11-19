@@ -12,6 +12,7 @@ import { ProductModule } from './modules/product/product.module';
 import { CategoryModule } from './modules/category/category.module';
 import { CartItemModule } from './modules/cart-item/cart-item.module';
 import { RelatedImageModule } from './modules/related-image/related-image.module';
+import { RatingModule } from './modules/rating/rating.module';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { RelatedImageModule } from './modules/related-image/related-image.module
         username: configService.get<string>('DATABASE_USER'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        synchronize: false,
+        synchronize: true,
         autoLoadEntities: true,
         logging: true,
         entities: [__dirname + '/../database/entities/*.entity{.ts,.js}'],
@@ -35,6 +36,7 @@ import { RelatedImageModule } from './modules/related-image/related-image.module
       }),
       inject: [ConfigService],
     }),
+    RatingModule,
     UserModule,
     RoleModule,
     CartModule,
